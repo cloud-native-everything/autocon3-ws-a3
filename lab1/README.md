@@ -18,7 +18,7 @@ The first part is to setup the Infrastructure for the deployment of the cluster 
 Navigate to the workspace folder for the section of lab1.
 
 ```shell
-# change into the lab1 directory
+# change into Part 1 directory
 cd /workspaces/autocon3-ws-a3/lab1
 ```
 

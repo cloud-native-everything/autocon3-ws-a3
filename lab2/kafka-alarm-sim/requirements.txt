@@ -1,0 +1,5 @@
+requests==2.31.0
+pyyaml==6.0.1
+confluent_kafka==2.2.0
+prometheus-client==0.18.0
+kafka-python==2.0.2

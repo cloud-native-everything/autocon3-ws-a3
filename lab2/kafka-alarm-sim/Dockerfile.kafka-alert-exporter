@@ -1,0 +1,31 @@
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
+
+LABEL org.opencontainers.image.source="https://github.com/nsp-kafka-sim/kafka-alert-exporter"
+
+# Set the working directory in the container to /app
+WORKDIR /app
+
+# Copy the application script into the container
+COPY kafka-alert-exporter.py /app/kafka-alert-exporter.py
+COPY kafka-msgs.py /app/kafka-msgs.py
+COPY kafka-check.py /app/kafka-check.py
+
+# Copy the alarms list file (modify as needed)
+COPY alarms.yml /app/alarms.yml
+
+# Copy and install dependencies
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose the application port
+EXPOSE 8001
+
+# Define environment variables (adjust based on deployment needs)
+ENV KAFKA_BOOTSTRAP_SERVERS=localhost:9092
+#ENV CA_CERT_PATH=/app/ca_cert.pem
+ENV METRICS_PORT=8001
+ENV alarms_FILE=/app/alarms.yml
+
+# Run the application
+CMD ["python3", "./kafka-alert-exporter.py", "--bootstrap-servers", "${KAFKA_BOOTSTRAP_SERVERS}", "--cert", "${CA_CERT_PATH}", "--port", "${METRICS_PORT}", "--alarms", "${alarms_FILE}"]

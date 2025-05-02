@@ -1,0 +1,13 @@
+apiVersion: 1
+
+providers:
+  - name: 'default' # Name of the dashboard provider
+    orgId: 1 # Specify the organization id, 1 is usually the default organization
+    folder: '' # The name of the folder to save the dashboards in Grafana
+    folderUid: '' # Optionally, you can specify a unique identifier for the folder
+    type: file # Specify the type of provider
+    disableDeletion: false # If true, Grafana will not delete dashboards present in Grafana but not in the directory
+    editable: true # Set to false to prevent users from changing the dashboard via the Grafana UI
+    updateIntervalSeconds: 60 # Time interval for how often Grafana will scan for changed dashboards
+    options:
+      path: /etc/grafana/provisioning/dashboards # Path to the directory where your dashboard JSON files are

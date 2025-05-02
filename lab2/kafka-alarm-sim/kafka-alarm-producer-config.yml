@@ -1,0 +1,15 @@
+topics:
+  baseline: "rt-anomalies"  # Kafka topic for baseline messages
+  indicator: "nsp-act-action-event"  # Kafka topic for indicator messages
+
+templates:
+  categories:
+    baseline:
+      - "baselineName"  # JSON must contain this key.
+      - timeSlotMin: 50 #seconds
+      - timeSlotMax: 300 #seconds
+    indicator:
+      - "nsp-act:action-event"  # JSON must contain this key
+      - "nsp-act:action-event"  # Nested inside "data.ietf-restconf:notification"
+      - timeSlotMin: 30 #seconds
+      - timeSlotMax: 150 #seconds     

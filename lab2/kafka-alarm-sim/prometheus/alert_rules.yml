@@ -1,0 +1,20 @@
+groups:
+  - name: anomaly_alerts
+    rules:
+      - alert: AnomalyDetected
+        expr: increase(anomaly_detected_count_total[24h]) > 0
+        for: 0s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Anomaly detected in {{ $labels.neName }}"
+          description: "New anomaly detected for {{ $labels.neName }} with counter {{ $labels.counter }}."
+
+      - alert: ThresholdViolation
+        expr: increase(threshold_violation_count_total[24h]) > 0
+        for: 0s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Threshold Violation in {{ $labels.source_neName }}"
+          description: "Threshold {{ $labels.payload_thresholdName }} crossed in {{ $labels.source_neName }}."

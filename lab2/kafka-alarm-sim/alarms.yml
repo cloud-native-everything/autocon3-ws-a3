@@ -1,0 +1,17 @@
+alarms:
+  - topic: 'rt-anomalies'
+    partition: 0
+    alertType: 'baseline'
+    counters:
+      anomaly_detected:
+        name: 'anomaly_detected'
+        description: 'Anomaly detected in real-time telemetry'
+        labels: ['neId', 'neName', 'counter']
+  - topic: 'nsp-act-action-event'
+    partition: 0
+    alertType: 'Threshold-Crossing'
+    counters:
+      threshold_violation:
+        name: 'threshold_violation'
+        description: 'Threshold Crossing Alert'
+        labels: ['source.neId', 'source.neName', 'payload.thresholdName']

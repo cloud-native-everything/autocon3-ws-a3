@@ -28,20 +28,14 @@ RUN bash -c "curl -LO 'https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/
 # install kind
 RUN bash -c "$(curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.25.0/kind-linux-amd64)" && chmod +x kind && mv kind /usr/local/bin/
 
-# install k9s
-RUN bash -c "curl -L  https://github.com/derailed/k9s/releases/download/v0.32.5/k9s_Linux_amd64.tar.gz | tar xz -C /bin"
-
-# install kubenetctl
-RUN bash -c "$(curl -sL https://github.com/kubenet-dev/kubenetctl/raw/main/install.sh)"
-
-# install choreoctl
-RUN bash -c "$(curl -sL https://github.com/kform-dev/choreo/raw/main/install-choreoctl.sh)"
-
 # install containerlab
 RUN bash -c "$(curl -sL https://get.containerlab.dev)"
 
-# install gNMIc and gNOIc
-RUN bash -c "$(curl -sL https://get-gnmic.openconfig.net)" && bash -c "$(curl -sL https://get-gnoic.kmrd.dev)"
+# add vscode user to clab_admins group for containerlab
+RUN usermod -aG clab_admins vscode
+
+# install gNMIc 
+RUN bash -c "$(curl -sL https://get-gnmic.openconfig.net)" 
 
 # add empty docker config files to avoid clab warnings for root user
 RUN mkdir -p /root/.docker && echo "{}" > /root/.docker/config.json
@@ -53,8 +47,6 @@ COPY ./.devcontainer/bash/install_bash_autocompletion.sh /tmp/install_bash_autoc
 RUN bash -c "/tmp/install_bash_autocompletion.sh"
 RUN usermod -s /bin/zsh vscode
 
-RUN skopeo copy docker://ghcr.io/sdcio/config-server:v0.0.41 docker-archive:/var/cache/config-server.tar:ghcr.io/sdcio/config-server:v0.0.41
-RUN skopeo copy docker://ghcr.io/sdcio/data-server:v0.0.49 docker-archive:/var/cache/data-server.tar:ghcr.io/sdcio/data-server:v0.0.49
 RUN skopeo copy docker://ghcr.io/nokia/srlinux:24.7.2 docker-archive:/var/cache/srlinux.tar:ghcr.io/nokia/srlinux:24.7.2
 RUN skopeo copy docker://kindest/node:v1.31.2 docker-archive:/var/cache/kindest-node.tar:kindest/node:v1.31.2
 RUN skopeo copy docker://grafana/grafana:11.5.2 docker-archive:/var/cache/grafana.tar:grafana/grafana:11.5.2

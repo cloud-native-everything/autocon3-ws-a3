@@ -1,0 +1,25 @@
+# Use a lightweight Python image
+FROM python:3.9-slim
+
+LABEL org.opencontainers.image.source="https://github.com/cloud-native-everything/nsp-kafka-sim/kafka-alarm-producer"
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy and install dependencies
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the application script into the container
+COPY kafka-alarm-producer.py /app/kafka-alarm-producer.py
+COPY kafka-check.py /app/kafka-check.py
+COPY kafka-test-producer.py /app/kafka-test-producer.py
+COPY kafka-alarm-producer-config.yml /app/kafka-alarm-producer-config.yml
+
+# Define environment variables
+ENV BOOTSTRAP_SERVERS="localhost:9092"
+ENV TEMPLATE_DIR="/app/kafka-sim-templates"
+ENV KAFKA_PRD_CFG="/app/kafka-alarm-producer-config.yml"
+
+# Set the command to run the script
+CMD ["python", "/app/kafka-alarm-producer.py", "--bootstrap-servers", "$BOOTSTRAP_SERVERS", "--template-dir", "$TEMPLATE_DIR", "--config", "$KAFKA_PRD_CFG"]

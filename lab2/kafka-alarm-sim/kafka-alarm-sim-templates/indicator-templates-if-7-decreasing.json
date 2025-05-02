@@ -1,0 +1,28 @@
+{
+    "data": {
+      "ietf-restconf:notification": {
+        "nsp-act:action-event": {
+          "type": "Threshold-Crossing",
+          "rule": "ind_threshold_0cb10458_f9c8_f4b8_ff31_b730150aa234",
+          "process": "Interface_7_decreasing",
+          "source": {
+            "neName": "10.13.0.234",
+            "name": "Interface",
+            "neId": "10.13.0.234",
+            "networkDeviceId": "/network-device-mgr:network-devices/network-device[name='10.13.0.234']/root/nokia-state:state/port[port-id='1/x1/1/c2/7']",
+            "eventTime": "{{timestamp}}"
+          },
+          "payload": {
+            "thresholdName": "Interface_7_decreasing",
+            "direction": "FALLING",
+            "threshold": "3.0",
+            "value": "{{random(0.1, 2.95)}}"
+          },
+          "content": "",
+          "timestamp": "{{timestamp}}"
+        },
+        "eventTime": "{{timestamp}}"
+      }
+    }
+  }
+  

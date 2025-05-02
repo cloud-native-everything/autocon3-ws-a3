@@ -44,5 +44,5 @@
         }
     },
     "workspaceMount": "source=${localWorkspaceFolder},target=/${containerWorkspaceFolder},type=bind",
-    "workspaceFolder": "/nanog93-krm-tutorial"
+    "workspaceFolder": "/workspaces/autocon3-ws-a3"
 }
