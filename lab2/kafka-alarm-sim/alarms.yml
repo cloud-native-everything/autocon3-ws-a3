@@ -1,12 +1,12 @@
 alarms:
-  - topic: 'rt-anomalies'
-    partition: 0
-    alertType: 'baseline'
-    counters:
-      anomaly_detected:
-        name: 'anomaly_detected'
-        description: 'Anomaly detected in real-time telemetry'
-        labels: ['neId', 'neName', 'counter']
+  # - topic: 'rt-anomalies'
+  #   partition: 0
+  #   alertType: 'baseline'
+  #   counters:
+  #     anomaly_detected:
+  #       name: 'anomaly_detected'
+  #       description: 'Anomaly detected in real-time telemetry'
+  #       labels: ['neId', 'neName', 'counter']
   - topic: 'nsp-act-action-event'
     partition: 0
     alertType: 'Threshold-Crossing'

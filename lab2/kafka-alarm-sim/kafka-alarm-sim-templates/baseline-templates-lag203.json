@@ -1,0 +1,38 @@
+{
+    "version": 3,
+    "owner": "fdn:model:rtanalytics:Baseline:14260606",
+    "baselineName": "MTCHSD0102M-PIRRSDBW03M - lag-203  - Egress",
+    "type": "baseline",
+    "detectorRule": "fdn:model:rtanalytics:BaselineDetector:16361752",
+    "counterGroup": "telemetry:/base/interfaces/utilization",
+    "counter": "transmitted-octets",
+    "resource": "/network-device-mgr:network-devices/network-device[name='10.13.0.13']/root/nokia-state:state/lag[lag-name='lag-203']",
+    "neId": "10.13.0.13",
+    "neName": "10.13.0.13",
+    "timestamp": "{{timestamp}}",
+    "originalUnits": "bps",
+    "originalDeviation": "{{random(5000000000, 8000000000)}}",
+    "originalMeasured": "{{random(300000000000, 350000000000)}}",
+    "originalExpected": "{{random(290000000000, 340000000000)}}",
+    "evaluateWhat": "value_",
+    "units": "bps",
+    "deviation": "{{random(1000000000, 5000000000)}}",
+    "measured": "{{random(300000000000, 350000000000)}}",
+    "expected": "{{random(290000000000, 340000000000)}}",
+    "evaluateWhen": "endOfWindow",
+    "detector": "zScoreAbsolute",
+    "comparison": "greaterThan",
+    "threshold": 1,
+    "score": "{{random(1.5, 2.5)}}",
+    "details": {
+      "version": 1,
+      "baseline": "fdn:model:rtanalytics:Baseline:14260606",
+      "windowId": "{{random(1000, 2000)}}",
+      "windowStart": "{{timestamp}}",
+      "windowEnd": "{{timestamp}}",
+      "startValue": "{{random(7900000000000000, 8000000000000000)}}",
+      "endValue": "{{random(7900000000000000, 8000000000000000)}}",
+      "baselineType": "counter"
+    }
+  }
+  
