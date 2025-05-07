@@ -13,24 +13,52 @@ topology:
   nodes:
     k8s01:
       kind: k8s-kind
-      image: kindest/node:v1.31.2
+      image: kindest/node:v1.31.2      
+      labels:
+        graph-posX: "945"
+        graph-posY: "395"
+        graph-group: k8s01
+        graph-level: "1"
+        graph-groupLabelPos: bottom-center
     k8s02:
       kind: k8s-kind
-      image: kindest/node:v1.31.2      
+      image: kindest/node:v1.31.2       
+      labels:
+        graph-posX: "1115"
+        graph-posY: "395"
+        graph-group: k8s02
+        graph-level: "1"
+        graph-groupLabelPos: bottom-center
     k8s01-control-plane:
       kind: ext-container
       exec:
         - "ip addr add 172.254.101.101/24 dev eth1"    
-        - "ip route add 172.0.0.0/8 via 172.254.101.1"    
+        - "ip route add 172.0.0.0/8 via 172.254.101.1"
+      labels:
+        graph-posX: "945"
+        graph-posY: "435"
+        graph-group: k8s01
+        graph-level: "1"
+        graph-groupLabelPos: bottom-center
     k8s02-control-plane:
       kind: ext-container
       exec:
         - "ip addr add 172.254.102.101/24 dev eth1"    
-        - "ip route add 172.0.0.0/8 via 172.254.102.1"    
+        - "ip route add 172.0.0.0/8 via 172.254.102.1"
+      labels:
+        graph-posX: "1115"
+        graph-posY: "435"
+        graph-group: k8s02
+        graph-level: "1"
+        graph-groupLabelPos: bottom-center
     dev1:
       kind: nokia_srlinux
       mgmt-ipv4: 172.21.0.210
       image-pull-policy: never
+      labels:
+        graph-posX: "1025"
+        graph-posY: "435"
+        graph-groupLabelPos: bottom-center
   links:
     - endpoints: ["dev1:e1-10","k8s01-control-plane:eth1"]
     - endpoints: ["dev1:e1-11","k8s02-control-plane:eth1"]      

@@ -1,70 +1,89 @@
-### **Lab Guide: Dynamic Traffic Generation**
+# **Lab 1 Guide: Dynamic Traffic Generation**
 
-Deploying a containerized iPerf app within Kind to generate and test traffic scenarios. This solution will leverage custom reconcilers for dynamic configuration. Using Containerlab & Kind to enhance network simulation and automation for realistic test environments.
+The first Hands-on Lab is about Deploying a containerized **iPerf** app within **Kind** to generate and test traffic scenarios. This solution will leverage **custom reconcilers** for dynamic configuration. By combining **Containerlab** and **Kind**, the lab enhances network simulation and automation, creating a more realistic and flexible test environment.
 
+| Item | Details |
+| --- | --- |
+| Short Description | Dynamic Traffic Generation with IPerf with Containerlab and Kind |
+| Skill Level | Intermediate |
+| Tools Used | Containerlab, Kind, Github Codespaces, Visual Studio Code, iPerf |
 
-## Infrastructure setup
+## Summary and Objective
+The first Hands-on Lab is about Deploying a containerized **iPerf** app within **Kind** to generate and test traffic scenarios. This solution will leverage **custom reconcilers** for dynamic configuration. By combining **Containerlab** and **Kind**, the lab enhances network simulation and automation, creating a more realistic and flexible test environment.
 
-Following are the steps to setup the environment.
+## **Step 1: Infrastructure Setup**
 
-Get into the workspace folder for this part of the lab
+The first part is to setup the Infrastructure for the deployment of the cluster afterwards.
+
+Navigate to the workspace folder for the section of lab1.
 
 ```shell
 # change into Part 1 directory
 cd /workspaces/autocon3-ws-a3/lab1
 ```
 
-Build iperf docker images
+---
+
+### Build the IPerf Docker images
+
+The next step is to build the iPerf Docker images for both the client and server. These images include all the necessary network tools for deploying their respective containers and automatically configure the required environment variables.
+
 ```shell
 docker build -t iperf3-client:0.1a -f iperf-images/Dockerfile.iperf3client .
 docker build -t iperf3-server:0.1a -f iperf-images/Dockerfile.iperf3server .
 ```
 
-### Load pre-cached container images
+---
+
+### Load pre-cached Container Images
+The container images for the NOS, in this case, SRLinux, have already been pre-cached and just need to be loaded in the next step.
 
 ```shell
 # import the locally cached sr-linux container image
 docker image load -i /var/cache/srlinux.tar
 ```
 
+The Kind container image has also been pre-cached locally and only needs to be loaded.
+
+```shell
+# import the locally cached kind container image
+docker image load -i /var/cache/kindest-node.tar
+```
+
 ---
 
-### **Setup Kubernetes Kind App**
+### Setting up the Container Networking
+To prevent issues with running Kind in Codespaces, we need to pre-create the Kind Docker bridge. This ensures that the containers can communicate properly.
 
-#### **What is Kind?**
-**Kind** is a opensource tool for running local Kubernetes clusters using Docker container "nodes." It’s great for learning, testing, or developing on Kubernetes.
+```shell
+# pre-creating the kind docker bridge. This is to avoid an issue with kind running in codespaces. 
+docker network create -d=bridge \
+    -o com.docker.network.bridge.enable_ip_masquerade=true \
+    -o com.docker.network.driver.mtu=1500 \
+    --subnet fc00:f853:ccd:e793::/64 kind
+```
+Additionally, we need to add iptable rules to enable communication between the Kubernetes cluster and the later-created ContainerLab topology.
 
-#### **Kind Installation**
-
-1. Import the locally cached kind node container image
-    ```shell
-    docker image load -i /var/cache/kindest-node.tar
-    ```
-
-2. Create docker network for kind and set iptable rule
-    ```shell
-    # pre-creating the kind docker bridge. This is to avoid an issue with kind running in codespaces. 
-    docker network create -d=bridge \
-      -o com.docker.network.bridge.enable_ip_masquerade=true \
-      -o com.docker.network.driver.mtu=1500 \
-      --subnet fc00:f853:ccd:e793::/64 kind
-    
-    # Allow the kind cluster to communicate with the later created containerlab topology
-    sudo iptables -I DOCKER-USER -o br-$(docker network inspect -f '{{ printf "%.12s" .ID }}' kind) -j ACCEPT
-    ```
+```shell
+# Allow the kind cluster to communicate with the later created containerlab topology
+sudo iptables -I DOCKER-USER -o br-$(docker network inspect -f '{{ printf "%.12s" .ID }}' kind) -j ACCEPT
+```
 
 
-3. **Start ContainerLab Topology**  
-   - Create two Kubernetes clusters:
+## **Step 2:  Setup Kubernetes Kind App**
+The second step focuses on setting up the Kubernetes clusters and configuring the router for communication.
+
+1. **Start ContainerLab Topology** 
+   - Creating the kubernetes clusters and router via containerlab:
       ```shell
-      # deploy Nokia SRL containers via containerlab
+      # deploy Nokia SRL containers via containerlab or use the vscode extension
       cd clab-topology
       sudo containerlab deploy
       cd ..
       ```
 
-4. **Kubernestes Contexts**
-  - You should be able to see both contexts, and '*' showing the current one.
+2. **Kubernestes Contexts**
+  - Verify that the cluster are running. You should be able to see both contexts, and '*' showing the current one.
     ```
     sudo kubectl config get-contexts
     CURRENT   NAME         CLUSTER      AUTHINFO     NAMESPACE
@@ -72,20 +91,20 @@ docker image load -i /var/cache/srlinux.tar
     *         kind-k8s02   kind-k8s02   kind-k8s02  
     ```
 
-4. **Preload the iperf3 Docker Images to Kind Kubernetes**  
-   - Load the iperf3 image into both clusters:
+3. **Preload the iperf3 Docker Images to Kind Kubernetes**  
+   - Load the previously build iperf3 image into both kubernetes clusters:
      ```bash
      kind load docker-image iperf3-client:0.1a --name k8s01
      kind load docker-image iperf3-server:0.1a --name k8s02
      ```
 
 
-5. **Set srlinux dev1 basic configuration**
-  - Get into dev1 and set a basic configuration
+4. **Set Srlinux dev1 Basic Configuration**
+  - Connect to dev1 and configure a basic configuration
     ```shell
     docker exec -ti dev1 sr_cli
     ```
-  - You should see something like this inside the srlinux interface:
+  - The terminal should show the following output:
     ```
       ❯ docker exec -ti dev1 sr_cli
       Using configuration file(s): []
@@ -95,7 +114,7 @@ docker image load -i /var/cache/srlinux.tar
       A:dev1#
     ```
 
-  - Now, paste the following:
+  - Now, paste the following configuration for the router:
     ```
     enter candidate
         network-instance default {
@@ -125,17 +144,18 @@ docker image load -i /var/cache/srlinux.tar
                   }
               }
           }
+      }
     commit now
     quit      
     ```
-  - dev1 should be configured and ready to communicate the iperf instances
+  - dev1 should now be configured and ready to communicate between the iperf instances
 
 ---
 
-### **Step 3: Transition to CRDs and Controller**
+## **Step 3: Transition to CRDs and Controller**
 This section introduces a Custom Resource Definition (CRD) for managing iperf3 traffic generator clients in Kubernetes. By defining IperfClient resources, we can declaratively configure client pods to connect to specific server IPs and ports. A custom controller ensures that pods are created or updates (or even deleted, that is out of the scope of this test) based on the CRD's state, enabling seamless scaling and dynamic updates. The client pods continuously run iperf3 commands in a loop, providing automated and reliable traffic generation for performance testing. This approach simplifies deployment, enhances flexibility, and leverages Kubernetes-native features for robust traffic management.
 
-#### **3A: Create a Custom Resource Definition**
+### **Creating a Custom Resource Definition**
 1. Define a `TrafficGenerator` CRD for iperf-server and iperf-client.
     ```shell
     sudo kubectl apply -f ./CRDs/iperf-server-crd.yaml --context kind-k8s02
@@ -243,7 +263,7 @@ This section introduces a Custom Resource Definition (CRD) for managing iperf3 t
     ```
 ---
 
-### **Summary**
+## **Summary**
  
-- **Step 1**: CRD with a custom controller for full declarative automation.  
+- **Objective**: CRD with a custom controller for full declarative automation.  
 - **Outcome**: Simplified management, scalability, and better monitoring using Kubernetes-native tools.

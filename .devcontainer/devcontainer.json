@@ -21,7 +21,7 @@
             "version": "1.21"
         }
     },
-    "remoteUser": "vscode",
+    "remoteUser": "root",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -38,7 +38,9 @@
                 "yzhang.markdown-all-in-one",
                 "davidanson.vscode-markdownlint",
                 // proto
-                "zxh404.vscode-proto3"
+                "zxh404.vscode-proto3",
+                // Clab extension
+                "srl-labs.vscode-containerlab"
             ]
         }
     },

@@ -49,6 +49,8 @@ RUN usermod -s /bin/zsh vscode
 
 RUN skopeo copy docker://ghcr.io/nokia/srlinux:24.10 docker-archive:/var/cache/srlinux.tar:ghcr.io/nokia/srlinux:24.10
 RUN skopeo copy docker://kindest/node:v1.31.2 docker-archive:/var/cache/kindest-node.tar:kindest/node:v1.31.2
+RUN skopeo copy docker://grafana/grafana:11.5.2 docker-archive:/var/cache/grafana.tar:grafana/grafana:11.5.2
+RUN skopeo copy docker://prom/prometheus:v3.2.1 docker-archive:/var/cache/prometheus.tar:prom/prometheus:v3.2.1
 
 # vscode user is created in the MS devcontainer image
 USER vscode

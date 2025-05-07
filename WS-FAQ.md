@@ -46,6 +46,9 @@ GitHub Codespaces is a cloud-hosted development environment accessible via your 
 
 ### 🔹 What are the steps to use local VS Code and open a local devcontainer from scratch?
 
+#### Step 0 — Verify System Requirements
+To run the DevContainer locally, your machine should have at least **16 GB of RAM** and **4 to 8 logical CPU cores (vCPUs)**. This ensures sufficient resources to run containers smoothly on your device.
+
 #### Step 1 — Install required tools:
 
 | Tool             | Mac Command (Homebrew)                 | Windows Link / Notes |
