@@ -231,7 +231,7 @@ By default, only threshold violations are enabled. Let's now enable the anomaly 
 Edit the file:
 
 ```bash
-nano alarms.yml
+code alarms.yml
 ```
 
 Uncomment the following block:
