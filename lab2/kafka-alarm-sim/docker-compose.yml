@@ -27,20 +27,30 @@ services:
       KAFKA_CREATE_TOPICS: "test-topic:1:1"
     networks:
       - kafka-backend
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9092"]
+      interval: 5s
+      retries: 10
+      start_period: 10s      
 
   kafka-alert-exporter:
     image: kafka-alert-exporter
     container_name: kafka-alert-exporter
+    depends_on:
+      kafka:
+        condition: service_healthy    
     networks:
       - kafka-backend
     ports:
       - "8001:8001"
+    volumes:
+      - ./alarms.yml:/app/alarms.yml      
     environment:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - CONFIG_FILE=/app/alarms.yml
-    command: ["python3", "/app/kafka-alert-exporter.py", "--bootstrap-servers", "kafka:9092", "--plaintext", "--config", "/app/alarms.yml", "--debug"]
-    volumes:
-      - ./alarms.yml:/app/alarms.yml
+      - METRICS_PORT=8001
+    command: >
+      sh -c "python3 /app/kafka-alert-exporter.py --bootstrap-servers \$${KAFKA_BOOTSTRAP_SERVERS} --plaintext --config \$${CONFIG_FILE} --debug"
     restart: unless-stopped
 
   kafka-alarm-grafana:
@@ -64,17 +74,18 @@ services:
     container_name: kafka-alarm-producer
     depends_on:
       kafka:
-        condition: service_started
+        condition: service_healthy 
     networks:
       - kafka-backend
+    volumes:
+      - ./kafka-alarm-sim-templates:/app/kafka-alarm-sim-templates
+      - ./kafka-alarm-producer-config.yml:/app/kafka-alarm-producer-config.yml      
     environment:
       - BOOTSTRAP_SERVERS=kafka:9092
       - TEMPLATE_DIR=/app/kafka-alarm-sim-templates
       - KAFKA_PRD_CFG=/app/kafka-alarm-producer-config.yml
-    command: ["python3", "/app/kafka-alarm-producer.py", "--bootstrap-servers", "kafka:9092", "--template-dir", "/app/kafka-alarm-sim-templates", "--config", "/app/kafka-alarm-producer-config.yml"]
-    volumes:
-      - ./kafka-alarm-sim-templates:/app/kafka-alarm-sim-templates
-      - ./kafka-alarm-producer-config.yml:/app/kafka-alarm-producer-config.yml
+    command: >
+      sh -c "python3 /app/kafka-alarm-producer.py --bootstrap-servers \$${BOOTSTRAP_SERVERS} --template-dir \$${TEMPLATE_DIR} --config \$${KAFKA_PRD_CFG}"
     restart: unless-stopped
 
 

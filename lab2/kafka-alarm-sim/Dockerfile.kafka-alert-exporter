@@ -18,14 +18,16 @@ COPY alarms.yml /app/alarms.yml
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the application port
-EXPOSE 8001
-
 # Define environment variables (adjust based on deployment needs)
 ENV KAFKA_BOOTSTRAP_SERVERS=localhost:9092
-#ENV CA_CERT_PATH=/app/ca_cert.pem
 ENV METRICS_PORT=8001
-ENV alarms_FILE=/app/alarms.yml
+ENV CONFIG_FILE=/app/alarms.yml
+#ENV CA_CERT_PATH=/app/ca_cert.pem
+
+
+# Expose the application port
+EXPOSE $METRICS_PORT
 
 # Run the application
-CMD ["python3", "./kafka-alert-exporter.py", "--bootstrap-servers", "${KAFKA_BOOTSTRAP_SERVERS}", "--cert", "${CA_CERT_PATH}", "--port", "${METRICS_PORT}", "--alarms", "${alarms_FILE}"]
+CMD ["python3", "./kafka-alert-exporter.py", "--bootstrap-servers", "${KAFKA_BOOTSTRAP_SERVERS}", "--port", "${METRICS_PORT}", "--alarms", "${CONFIG_FILE}"]
+#CMD ["python3", "./kafka-alert-exporter.py", "--bootstrap-servers", "${KAFKA_BOOTSTRAP_SERVERS}", "--cert", "${CA_CERT_PATH}", "--port", "${METRICS_PORT}", "--alarms", "${CONFIG_FILE}"]
