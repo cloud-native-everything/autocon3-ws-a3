@@ -36,3 +36,5 @@ You will learn to design, integrate, and deploy network applications with a focu
 Additionally, we will discuss GitHub best practices, including branch management, merging, pull requests, versioning, CI/CD with GitHub Actions, and designing applications for easy customization without modifying the core code.
 This hands-on workshop will guide you through the entire development lifecycle—from planning and integration to deployment and testing. By the end, you’ll have a solid foundation for building scalable, automated, and event-driven network applications with minimal coding.
 
+
+This [**FAQ**](https://github.com/cloud-native-everything/autocon3-ws-a3/blob/main/WS-FAQ.md) will help you get ready for the hands-on labs using either **GitHub Codespaces** or **local VS Code and Docker**. It covers tool installation, environment setup, and common scenarios for both **Mac** and **Windows** users.
