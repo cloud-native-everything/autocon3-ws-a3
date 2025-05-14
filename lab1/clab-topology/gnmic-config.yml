@@ -1,0 +1,109 @@
+# Copyright 2020 Nokia
+# Licensed under the BSD 3-Clause License.
+# SPDX-License-Identifier: BSD-3-Clause
+
+username: admin
+password: NokiaSrl1!
+port: 57400
+timeout: 10s
+skip-verify: true
+encoding: proto
+
+targets:
+  dev1:
+    subscriptions:
+      - srl_platform
+      - srl_apps
+      - srl_if_stats
+      - srl_if_lag_stats
+      - srl_net_instance
+      - srl_bgp_stats
+      - srl_event_handler_stats
+subscriptions:
+  srl_platform:
+    paths:
+      - /platform/control[slot=*]/cpu[index=all]/total
+      - /platform/control[slot=*]/memory
+    mode: stream
+    stream-mode: sample
+    sample-interval: 5s
+
+  srl_apps:
+    paths:
+      - /system/app-management/application[name=*]
+    mode: stream
+    stream-mode: sample
+    sample-interval: 5s
+
+  srl_if_stats:
+    paths:
+      - /interface[name=ethernet-1/*]/statistics
+      - /interface[name=*]/subinterface[index=*]/statistics/
+      - /interface[name=ethernet-1/*]/oper-state
+      - /interface[name=ethernet-1/*]/traffic-rate
+    mode: stream
+    stream-mode: sample
+    sample-interval: 5s
+
+  srl_if_lag_stats:
+    paths:
+      - /interface[name=*]/lag/member[name=*]/lacp/statistics
+    mode: stream
+    stream-mode: sample
+    sample-interval: 5s
+  
+  srl_net_instance:
+    paths:
+      - /network-instance[name=*]/oper-state
+      - /network-instance[name=*]/route-table/ipv4-unicast/statistics/
+      - /network-instance[name=*]/route-table/ipv6-unicast/statistics/
+    mode: stream
+    stream-mode: sample
+    sample-interval: 5s
+
+  srl_bgp_stats:
+    paths:
+      - /network-instance[name=*]/protocols/bgp/statistics
+      - /network-instance[name=*]/protocols/bgp/group[group-name=*]/statistics
+    mode: stream
+    stream-mode: sample
+    sample-interval: 5s
+
+  srl_event_handler_stats:
+    paths:
+      - /system/event-handler/instance[name=*]/statistics/
+    mode: stream
+    stream-mode: sample
+    sample-interval: 5s
+
+outputs:
+  prom:
+    type: prometheus
+    listen: :9273
+    path: /metrics
+    export-timestamps: true
+    strings-as-labels: true
+    debug: false
+    event-processors:
+      - up-down-map
+
+processors:
+  up-down-map:
+    event-strings:
+      value-names:
+        - oper-state
+      transforms:
+        - replace:
+            apply-on: "value"
+            old: "up"
+            new: "1"
+        - replace:
+            apply-on: "value"
+            old: "down"
+            new: "0"
+  # stdout:
+  #   type: file
+  #   file-type: stdout
+  #   event-processors:
+  #     - proc-convert-strings-to-int
+  #     - trim-prefixes

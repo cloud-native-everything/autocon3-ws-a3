@@ -59,6 +59,39 @@ topology:
         graph-posX: "1025"
         graph-posY: "435"
         graph-groupLabelPos: bottom-center
+    gnmic:
+      kind: linux
+      mgmt-ipv4: 172.21.0.211
+      image: ghcr.io/openconfig/gnmic:0.38.2
+      binds:
+        - gnmic-config.yml:/gnmic-config.yml:ro
+      cmd: --config /gnmic-config.yml --log subscribe
+    prometheus:
+      kind: linux
+      mgmt-ipv4: 172.21.0.212
+      image: prom/prometheus:v2.51.2
+      ports:
+        - 9095:9090
+      binds:
+        - prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      cmd: --config.file=/etc/prometheus/prometheus.yml
+    grafana:
+      kind: linux
+      mgmt-ipv4: 172.21.0.213
+      image: grafana/grafana:10.3.5
+      binds:
+        - grafana-datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
+        - grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yaml:ro
+        - dashboards/:/var/lib/grafana/dashboards
+      env:
+        GF_ORG_ROLE: "Editor"
+        GF_ORG_NAME: "Main Org."
+        GF_AUTH_ANONYMOUS_ENABLED: "true"
+        GF_AUTH_ANONYMOUS: "true"
+        GF_SECURITY_ADMIN_PASSWORD: "Autoc0n!!"
+      cmd: "sh -c grafana cli admin reset-admin-password ${GF_SECURITY_ADMIN_PASSWORD} && /run.sh"
+      ports:
+        - 3005:3000
   links:
     - endpoints: ["dev1:e1-10","k8s01-control-plane:eth1"]
     - endpoints: ["dev1:e1-11","k8s02-control-plane:eth1"]      
