@@ -249,7 +249,26 @@ This section introduces a Custom Resource Definition (CRD) for managing iperf3 t
 
 11. Inspect the activity in the instances via  `sudo kubectl logs iperf3-client-30001 --context kind-k8s01` and/or check the traffic stats flowing thru the switch.
 
-12. Cleaning up everything
+12. Inspect the activity via Grafana UI.
+
+### **🔍 Access Monitoring UIs via VSCode**
+
+Depending on your environment:
+
+#### 🔧 If you're using **VSCode Dev Containers (locally)**
+
+1. Open the **"Ports"** tab at the bottom panel in VSCode.
+2. Locate and click on any of the following ports to **open in your browser**:
+   - **`3005`** — Grafana (interactive dashboards)
+
+#### ☁️ If you're using **GitHub Codespaces**
+
+1. Click on **"Ports"** in the top menu.
+2. Wait for the port list to populate and click **"Open in Browser"** on the relevant entry.
+   - Ensure **port 3005** is visible and published (if not, add it manually or ensure the container is running).
+
+---
+13. Cleaning up everything
 
     ```shell
     sudo kubectl delete -f ./CRDs/iperf-client-setup.yaml --context kind-k8s01
