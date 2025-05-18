@@ -343,6 +343,7 @@ jobs:
      - `contents: read`
      - `packages: write`
    - Name it something like `GHCR Token`
+   - Copy the Token String and keep it safe for use in next step.
 
 3. In your forked repository:
    - Go to **Settings > Secrets and variables > Actions**
