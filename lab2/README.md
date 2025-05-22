@@ -337,7 +337,7 @@ jobs:
 ### 🔐 Step 3: Create a GitHub Token for Publishing
 
 1. Go to **https://github.com/settings/tokens/new**  
-2. Create a **fine-grained token** with:
+2. Create a **Personal access tokens (classic)** with:
    - **Repository access**: your forked repo
    - **Permissions**:
      - `contents: read`
