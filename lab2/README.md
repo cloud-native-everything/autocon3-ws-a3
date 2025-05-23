@@ -365,8 +365,22 @@ ghcr.io/<your-username>/<repo-name>:v1
 You can verify it under your GitHub profile → **Packages**.
 
 ---
+### 🛠️ Step 5: Change Package to Public
 
-### 🛠️ Step 5: Update `docker-compose.yml`
+Open the Package Page: GitHub profile → **Packages**.
+
+1. Select the package created in the previous step
+2. Go to **Package Settings**:
+   On the package page, click on the "Package Settings" button on the right side of the screen.
+3. Change Visibility:
+   Under the **"Danger Zone"** you should see the visibility settings. Click on Change Visibility
+4. Change from **Private** to **Public**.
+5. **Confirm** the Change:
+   GitHub may ask you to confirm this change. Confirm it if prompted.
+
+---
+
+### 🛠️ Step 6: Update `docker-compose.yml`
 
 Now that you’ve published your image, update the `docker-compose.yml` to use it:
 
