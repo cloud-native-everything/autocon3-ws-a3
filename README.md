@@ -16,9 +16,12 @@ Install the following extensions:
 
 # Workshop Overview
 
-**Proctor(s):** Mau Rojas, Drew Elliott, Emre Cinar - Nokia
+**Proctor(s):** Mau Rojas, Emre Cinar and Deepinder Kalra - Nokia
+
 **Level:** Intermediate (some knowledge needed)
+
 **Description:** In modern network automation, the smartest approach is not writing everything from scratch but rather leveraging open-source tools like Prometheus, Containerlab, Kind, and gNMIc; minimizing effort while maximizing efficiency through declarative solutions and event-driven automation. 
+
 **Agenda (High level):**
 - Popular opensource techs and DevOps practices
 - CI/CD via GitHub actions for managing container images
@@ -38,3 +41,4 @@ This hands-on workshop will guide you through the entire development lifecycleâ€
 
 
 This [**FAQ**](https://github.com/cloud-native-everything/autocon3-ws-a3/blob/main/WS-FAQ.md) will help you get ready for the hands-on labs using either **GitHub Codespaces** or **local VS Code and Docker**. It covers tool installation, environment setup, and common scenarios for both **Mac** and **Windows** users.
+
