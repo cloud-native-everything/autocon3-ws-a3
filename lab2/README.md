@@ -326,6 +326,7 @@ jobs:
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ${{ env.REGISTRY }} --username ${{ github.actor }} --password-stdin
 
       - name: Docker Build
+        working-directory: lab2/kafka-alarm-sim
         run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} -f Dockerfile.kafka-alert-exporter .
 
       - name: Docker Push
