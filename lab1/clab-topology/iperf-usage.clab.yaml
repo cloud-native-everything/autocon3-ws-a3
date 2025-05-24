@@ -13,18 +13,21 @@ topology:
   nodes:
     k8s01:
       kind: k8s-kind
-      image: kindest/node:v1.31.2      
+      image: kindest/node:v1.21.1
       labels:
-        graph-posX: "945"
+        graph-icon: server
+        graph-posX: "255"
         graph-posY: "395"
         graph-group: k8s01
         graph-level: "1"
         graph-groupLabelPos: bottom-center
     k8s02:
       kind: k8s-kind
-      image: kindest/node:v1.31.2       
+      image: kindest/node:v1.21.1
+      startup-delay: 250
       labels:
-        graph-posX: "1115"
+        graph-icon: server
+        graph-posX: "455"
         graph-posY: "395"
         graph-group: k8s02
         graph-level: "1"
@@ -32,22 +35,25 @@ topology:
     k8s01-control-plane:
       kind: ext-container
       exec:
-        - "ip addr add 172.254.101.101/24 dev eth1"    
+        - "ip addr add 172.254.101.101/24 dev eth1"
         - "ip route add 172.0.0.0/8 via 172.254.101.1"
       labels:
-        graph-posX: "945"
-        graph-posY: "435"
+        graph-icon: controller
+        graph-posX: "255"
+        graph-posY: "345"
         graph-group: k8s01
         graph-level: "1"
         graph-groupLabelPos: bottom-center
     k8s02-control-plane:
       kind: ext-container
+      startup-delay: 270
       exec:
-        - "ip addr add 172.254.102.101/24 dev eth1"    
+        - "ip addr add 172.254.102.101/24 dev eth1"
         - "ip route add 172.0.0.0/8 via 172.254.102.1"
       labels:
-        graph-posX: "1115"
-        graph-posY: "435"
+        graph-icon: controller
+        graph-posX: "455"
+        graph-posY: "345"
         graph-group: k8s02
         graph-level: "1"
         graph-groupLabelPos: bottom-center
@@ -56,8 +62,8 @@ topology:
       mgmt-ipv4: 172.21.0.210
       image-pull-policy: never
       labels:
-        graph-posX: "1025"
-        graph-posY: "435"
+        graph-posX: "355"
+        graph-posY: "345"
         graph-groupLabelPos: bottom-center
     gnmic:
       kind: linux
@@ -66,6 +72,11 @@ topology:
       binds:
         - gnmic-config.yml:/gnmic-config.yml:ro
       cmd: --config /gnmic-config.yml --log subscribe
+      labels:
+        graph-icon: server
+        graph-posX: "355"
+        graph-posY: "310"
+        graph-groupLabelPos: bottom-center
     prometheus:
       kind: linux
       mgmt-ipv4: 172.21.0.212
@@ -75,6 +86,11 @@ topology:
       binds:
         - prometheus.yml:/etc/prometheus/prometheus.yml:ro
       cmd: --config.file=/etc/prometheus/prometheus.yml
+      labels:
+        graph-icon: server
+        graph-posX: "355"
+        graph-posY: "280"
+        graph-groupLabelPos: bottom-center
     grafana:
       kind: linux
       mgmt-ipv4: 172.21.0.213
@@ -89,11 +105,15 @@ topology:
         GF_AUTH_ANONYMOUS_ENABLED: "true"
         GF_AUTH_ANONYMOUS: "true"
         GF_SECURITY_ADMIN_PASSWORD: "Autoc0n!!"
-      cmd: "sh -c grafana cli admin reset-admin-password ${GF_SECURITY_ADMIN_PASSWORD} && /run.sh"
+      cmd: "sh -c grafana cli admin reset-admin-password ${GF_SECURITY_ADMIN_PASSWORD}
+        && /run.sh"
       ports:
         - 3005:3000
+      labels:
+        graph-icon: server
+        graph-posX: "355"
+        graph-posY: "250"
+        graph-groupLabelPos: bottom-center
   links:
-    - endpoints: ["dev1:e1-10","k8s01-control-plane:eth1"]
-    - endpoints: ["dev1:e1-11","k8s02-control-plane:eth1"]      
-
-     
+    - endpoints: [ "dev1:e1-10", "k8s01-control-plane:eth1" ]
+    - endpoints: [ "dev1:e1-11", "k8s02-control-plane:eth1" ]

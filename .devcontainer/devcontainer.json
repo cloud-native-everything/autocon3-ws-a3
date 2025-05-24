@@ -8,9 +8,11 @@
             "CLAB_VERSION": "${localEnv:CLAB_VERSION}"
         }
     },
+    "mounts": ["type=bind,src=/lib/modules,dst=/lib/modules"],
+    "runArgs": ["--privileged", "--init"],
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker:2": {
-            "version": "latest",
+            "version": "26.1.5",
             "dockerDashComposeVersion": "none"
         },
         // Add sshd to support gh cli codespace cp.
