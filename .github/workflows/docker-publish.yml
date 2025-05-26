@@ -1,0 +1,28 @@
+name: Docker Push kafka-alert-exporter image
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}:v1
+
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Docker Login
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ${{ env.REGISTRY }} --username ${{ github.actor }} --password-stdin
+
+      - name: Docker Build
+        working-directory: lab2/kafka-alarm-sim
+        run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} -f Dockerfile.kafka-alert-exporter .
+
+      - name: Docker Push
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
