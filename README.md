@@ -42,3 +42,13 @@ This hands-on workshop will guide you through the entire development lifecycle�
 
 This [**FAQ**](https://github.com/cloud-native-everything/autocon3-ws-a3/blob/main/WS-FAQ.md) will help you get ready for the hands-on labs using either **GitHub Codespaces** or **local VS Code and Docker**. It covers tool installation, environment setup, and common scenarios for both **Mac** and **Windows** users.
 
+## Presentation Deck files
+
+- **Deck1 - [Introduction & Foundations (.pdf)](deck-pdf-files/ac3-ws-a3-deck1-intro-and-foundations.pdf):** Participants are introduced to the workshop’s guiding principles—declarative automation and event-driven design. The session provides a tech overview of the tools (Containerlab, Kind, iPerf, Reconcilers, gNMIc) and demonstrates how to structure code and container images for streamlined deployment and DevOps workflows.
+
+- **Deck2 - [Lab 1 / Dynamic Traffic Generation (.pdf)](deck-pdf-files/ac3-ws-a3-deck2-lab1.pdf):** A hands-on session focused on building a traffic simulation app using containerized iPerf. Attendees learn how to deploy apps with Kind and automate them using custom reconcilers. The lab mirrors real-world network testing scenarios and uses the Containerlab VS Code extension to ease setup and visualization.
+
+- **Deck3 - [Introduction & Preparation for Data Transformation (.pdf)](deck-pdf-files/ac3-ws-a3-deck3-prep-data-transformation.pdf):** This segment sets up the next lab by introducing the second use case—transforming network data for observability. It covers the use of Prometheus, Grafana, and Kafka, best practices for app customization using config files, and GitHub workflows including branching, PRs, versioning, and CI/CD pipelines.
+
+- **Deck4 - [Lab 2 / Data Transformation & Automation (.pdf)](deck-pdf-files/ac3-ws-a3-deck4-lab2.pdf):** The second hands-on lab guides participants through streaming telemetry data via Kafka, processing it, and visualizing insights with Prometheus and Grafana. The goal is to demonstrate real-time observability and alerting using a practical, scalable automation pattern.
+
