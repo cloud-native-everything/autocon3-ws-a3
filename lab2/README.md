@@ -303,7 +303,7 @@ In your forked repo, create a file:
 Paste the following workflow (edit the image tag if needed):
 
 ```yaml
-name: Docker Push kafka-alert-exporter image
+name: Docker Build and Push kafka-alert-exporter Image
 
 on:
   push:
@@ -312,25 +312,43 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}:v1
+  IMAGE_REPO: ${{ github.repository }}  
+  IMAGE_TAG: v1
 
 jobs:
   build_and_publish:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Docker Login
-        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ${{ env.REGISTRY }} --username ${{ github.actor }} --password-stdin
+        run: |
+          echo "${{ secrets.GHCR_TOKEN }}" \
+            | docker login ${{ env.REGISTRY }} \
+              --username ${{ github.actor }} \
+              --password-stdin
+
+      - name: Prepare Lowercase Image Name
+        run: |
+          # Convert repository name to lowercase
+          IMAGE_NAME_LOWER=$(echo "${{ env.IMAGE_REPO }}" | tr '[:upper:]' '[:lower:]')
+          # Export full image name (including tag) to environment
+          echo "IMAGE_NAME_LOWER=${IMAGE_NAME_LOWER}:${{ env.IMAGE_TAG }}" >> $GITHUB_ENV
 
       - name: Docker Build
         working-directory: lab2/kafka-alarm-sim
-        run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} -f Dockerfile.kafka-alert-exporter .
+        run: |
+          docker build \
+            -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }} \
+            -f Dockerfile.kafka-alert-exporter \
+            .
 
       - name: Docker Push
-        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}
+
 ```
 
 ---
