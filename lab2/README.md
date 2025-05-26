@@ -341,7 +341,6 @@ jobs:
 2. Create a **Personal access tokens (classic)** with:
    - **Repository access**: your forked repo
    - **Permissions**:
-     - `contents: read`
      - `packages: write`
    - Name it something like `GHCR Token`
    - Copy the Token String and keep it safe for use in next step.
